@@ -1,0 +1,99 @@
+Project Notes
+
+1. Authentication (NextAuth.js + JWT)
+	•	NextAuth.js for simple authentication with JWT.
+	•	Password-based access: Users log in using a secret password.
+	•	Profile Selection: After login, users can select Ivan or Isaac as their profile, with each profile displaying separate worlds, characters, and stories.
+	•	JWT Sessions: Handle sessions via JWT for simplicity, with the session stored in a cookie or local storage.
+
+2. Database Setup (Supabase)
+	•	Supabase will store the core data:
+	•	Users: Manage user authentication and profile selection.
+	•	Worlds, Characters, Stories: Each profile (Ivan/Isaac) has its own unique set of data.
+	•	Media: Store images, videos, and audio related to worlds, characters, and stories.
+	•	The database relationships are simple and only depend on the profile (Ivan or Isaac) for segmentation.
+
+3. OpenAI - Text Generation
+	•	OpenAI GPT will generate story content based on user input.
+	•	Story Creation: Generate narratives or character descriptions.
+	•	Profile-Specific Content: Generated content (story, characters, etc.) will be tied to the selected profile (Ivan or Isaac).
+
+4. ElevenLabs - Text-to-Speech (TTS) & Speech-to-Text (STT)
+	•	TTS: Use ElevenLabs for reading the story aloud, with multi-voice support for different characters (Ivan and Isaac).
+	•	STT: Convert user speech into text for interactions with the story.
+	•	Modular API Calls: The TTS and STT functions should be independent, enabling easy updates or replacements.
+
+5. DALL-E - Image Generation
+	•	DALL-E will generate images for each section of the story.
+	•	Story Sections: Once the story is created, split it into sections and generate images to visualize the scenes described.
+
+6. PIAPI (Wan2.1) - Video Generation
+	•	PIAPI will convert DALL-E images into animated videos.
+	•	Image-to-Video: After DALL-E generates images, send them to PIAPI to create video clips that align with story sections.
+
+7. FFmpeg - Combine Audio and Video
+	•	FFmpeg will combine audio and video into a final, synchronized file.
+	•	Combine Audio Clips: Merge the individual TTS-generated audio clips into a single audio file.
+	•	Combine Video Clips: Merge the video clips from PIAPI into a single video file.
+	•	Sync Audio and Video: Ensure the video clips match the audio length and are aligned correctly.
+
+8. Final Story Creation
+	•	Final Output: The app will generate a complete audio-video minimovie.
+	•	Store in Supabase: Store the combined audio-video file for later viewing by the user.
+
+Frontend First Development Approach (Cursor Rules)
+
+General Principles for Development:
+	1.	Frontend First:
+	•	Start with the front-end: Build the auth page first, then the app page, then implement profile switching, and so on.
+	•	Iterate and test as you go: Each step should be built, tested, and verified before moving on to the next.
+	•	Avoid backend-first: Don’t implement the backend until the frontend has been established and validated. This ensures seamless integration and prevents bloated code or unforeseen issues when connecting the backend.
+	2.	Modular APIs:
+	•	Each API (TTS, STT, OpenAI, etc.) should be modular. This means that each API should work independently, so they can be called separately and reused wherever needed.
+	•	For example, the TTS API (ElevenLabs) should work separately from the STT API. If you need TTS functionality on one page and STT on another, these modules should be able to be plugged in without conflicts.
+	3.	Step-by-Step Development:
+	•	Start with Authentication: Build a simple login page with a password input. Use NextAuth.js for authentication and set up JWT for session management.
+	•	Build the Main App Page: Once authentication is set up, proceed to create the main app page where users can select their profile (Ivan or Isaac).
+	•	Profile-Specific Content: As users choose between profiles, load and display profile-specific content (worlds, characters, and stories).
+	•	Story Creation and Interaction: Implement the OpenAI integration for story generation, and allow for simple back-and-forth between the user and the AI to create/edit stories or characters.
+	•	Image and Video Generation: Implement DALL-E and PIAPI for generating images and videos for the story sections.
+	•	Audio Creation: Integrate ElevenLabs TTS to read aloud the story sections with multi-voice support for characters.
+	•	Final Assembly with FFmpeg: Combine all the audio and video files into a single output using FFmpeg, and present the final audio-video minimovie to the user.
+	4.	Avoid Overcomplicating Features:
+	•	Build each feature incrementally and modularly to avoid bloated code. Start simple with a minimum viable product (MVP) and expand from there.
+	•	Don’t rush to build all features at once—implement core features one at a time (e.g., authentication, profile switching, story creation, etc.).
+
+Helpful Documentation Links for Cursor:
+
+Here are the useful links for you to index in Cursor, which will help guide the AI throughout the process:
+	1.	Next.js Documentation:
+	•	https://nextjs.org/docs
+	•	For setting up the app directory, pages, and API routes.
+	2.	NextAuth.js Documentation:
+	•	https://next-auth.js.org/getting-started/introduction
+	•	For setting up simple JWT authentication with password login.
+	3.	Supabase Documentation:
+	•	https://supabase.com/docs
+	•	Learn how to set up tables, authentication, and storage in Supabase.
+	4.	OpenAI API Documentation:
+	•	https://beta.openai.com/docs/
+	•	Learn how to use OpenAI to generate text stories and handle story context.
+	5.	ElevenLabs API Documentation:
+	•	https://elevenlabs.io/docs
+	•	Documentation for using ElevenLabs’ TTS and STT functionality with multi-voice support.
+	6.	PIAPI (Wan2.1) Documentation:
+	•	https://piapi.ai/docs/overview
+	•	Learn how to convert images to animated video using PIAPI (Wan2.1).
+	7.	FFmpeg Documentation:
+	•	https://ffmpeg.org/documentation.html
+	•	Detailed guide on using FFmpeg to merge audio and video files, sync them, and more.
+	8.	Material UI Documentation:
+	•	https://mui.com/getting-started/installation/
+	•	For integrating Material UI components to build the user interface.
+
+Summary:
+	•	Frontend First: Focus on building the frontend one step at a time, starting with the auth page and moving to the app page, then profile management, story generation, etc.
+	•	Modular APIs: Keep APIs for TTS, STT, story generation, etc., independent so they can be reused easily and integrated one-by-one as needed.
+	•	Iterative Development: Don’t rush. Build, test, and validate each part of the app incrementally.
+	•	FFmpeg for Media Processing: Use FFmpeg to combine audio and video files into the final story video.
+	•	Material UI for styling to ensure modern, responsive UI components.

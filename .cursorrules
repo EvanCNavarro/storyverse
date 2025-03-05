@@ -1,0 +1,104 @@
+# **StoryVerse Project Cursor Rules**
+
+This document serves as the central guide for developing the **StoryVerse** interactive storytelling platform. It provides specific rules, best practices, and lessons learned during the development process.
+
+---
+
+## **Lessons**
+_This section documents corrections, important library versions, API changes, or fixes discovered during development, particularly related to AI integrations._
+
+- **Rive Animation Integration**: Using an iframe embed approach for Rive animations is more reliable than the React component, particularly when animations need to be loaded and controlled. Iframe src can be updated to change animations easily.
+- **Material UI Attributes**: Use `textAlign` instead of `align` for Typography components to avoid duplicate attribute errors in the JSX.
+- **Next.js App Router**: The app router approach in Next.js 14 simplifies routing, but requires special attention to client vs server components. Use 'use client' directive appropriately.
+
+---
+
+## **Objective**
+- **Deliver a minimalistic app** that allows users to generate interactive stories, including text-to-speech narration, image-to-video creation, and combine them into a final audio-video story.
+- **Profile-based content management**: Users can select between two profiles (Ivan or Isaac), and each profile has its own worlds, characters, and stories.
+
+---
+
+## **Code Style and Structure**
+- **Simple, Modular Code**: Each feature (like **TTS**, **STT**, **OpenAI**, etc.) must be developed independently to maintain flexibility and prevent conflicts.
+- **Component Reusability**: Keep components and modules **reusable** across different pages or use cases. For example, the **TTS API** (ElevenLabs) should work independently from the **STT API**, so they can be used on different pages.
+- **Separation of Concerns**: Organize code into logical sections—**authentication**, **story generation**, **media handling**, etc.—with each section serving a distinct purpose.
+
+---
+
+## **Optimization and Best Practices**
+- **Keep It Simple**: Focus on **minimal viable product (MVP)** first, adding complexity only when necessary.
+- **Optimize for Performance**: When combining media (e.g., audio and video), use tools like **FFmpeg** efficiently to prevent overloading resources.
+- **Efficient API Usage**: Only call external APIs (like **OpenAI**, **ElevenLabs**, **PIAPI**) when necessary to avoid excessive requests or high costs.
+- **Caching**: Consider caching large media files (images, videos) that are reused frequently to reduce load time and API calls.
+
+---
+
+## **UI and Styling**
+- **Material UI**: Use **Material UI** for creating modern, responsive, and consistent UI components.
+  - **Login Page**: Simple form with a password input for authentication.
+  - **Profile Selection**: Provide an intuitive UI for switching between Ivan's and Isaac's profiles.
+  - **Interactive Story Page**: Display generated stories, characters, and media (images, videos, audio) in an organized, user-friendly manner.
+
+---
+
+## **AI Integration Best Practices**
+- **Modular AI APIs**: Treat each AI component (like **OpenAI**, **ElevenLabs**, **PIAPI**) as an **independent module** so that you can call them when needed without dependencies.
+  - **Text-to-Speech (TTS)**: When reading the story, use **multi-voice support** to differentiate between characters. Ensure that each character has its own distinct voice for a richer storytelling experience.
+  - **Text Generation (OpenAI)**: Ensure the generated text is **profile-specific** (i.e., Ivan's stories vs. Isaac's stories).
+  - **Image-to-Video (PIAPI)**: Ensure the generated videos align with the length and context of the TTS audio clips.
+
+---
+
+## **Security and Performance**
+- **JWT for Authentication**: Use **JWT** to manage sessions, which is simpler and more lightweight than traditional database-backed sessions.
+- **Data Validation**: Validate inputs (e.g., story prompts) to ensure that content stays **appropriate for all ages**, using **OpenAI**'s moderation tools and manual validation.
+- **API Rate Limiting**: Monitor the usage of APIs like **OpenAI**, **ElevenLabs**, and **PIAPI** to prevent exceeding usage limits or triggering unnecessary charges.
+
+---
+
+## **Methodology**
+
+1. **Analytical Approach**: Break tasks down **systematically**, clearly analyzing each component's technical requirements and implications. For example, when adding **story generation** via **OpenAI**, analyze how it integrates with the **TTS** and **STT** components.
+2. **Multiple Solutions Exploration**: For each component, consider **multiple potential implementations** and choose the one that offers the best maintainability, scalability, and cost-effectiveness. For instance, should **FFmpeg** be used for combining media locally, or is a cloud-based solution like **Cloudinary** more suitable for video processing?
+3. **Iterative Improvements**: As features are implemented, **consistently revisit and refine solutions** to enhance performance and maintainability, especially around AI integrations (e.g., improving story coherence generated by **OpenAI** or optimizing video generation with **PIAPI**).
+
+---
+
+## **Process**
+
+1. **Analysis**: Begin tasks by fully understanding the **StoryVerse-specific constraints** and requirements, especially regarding **AI integration** and **child-friendly content**.
+   - Example: When integrating **ElevenLabs TTS**, ensure that different voices are used for characters and that the generated audio is easily accessible by the frontend.
+   
+2. **Planning**: Clearly outline the proposed solution, highlighting areas requiring particular attention, such as **content validation** or integration challenges (e.g., how **DALL-E** and **PIAPI** will work together).
+   - Example: How will **OpenAI** text be split into manageable sections, and how will **DALL-E** images be generated for each section?
+
+3. **Implementation**: Execute the plan **iteratively**, focusing on one feature at a time. For example, build the **auth page** first, and once it's verified, move on to profile selection, and then story generation, etc.
+   - Example: Ensure **profile switching** works before connecting to **Supabase** to fetch profile-specific data.
+
+4. **Optimization Review**: Regularly revisit the implementation to ensure **performance** and **security** are optimized, especially for **AI integrations**.
+   - Example: If the AI story generation is too slow, look for opportunities to optimize the integration with **OpenAI**.
+
+5. **Finalization**: Once a feature is fully tested and verified, **merge it into the main branch**, ensuring that all integrations (e.g., **FFmpeg** combining audio-video) work correctly across the app.
+   - Example: Combine all media files (audio + video) into a final minimovie, and ensure it's saved to **Supabase**.
+
+---
+
+## **Frontend First Development Approach**
+
+### General Principles:
+1. **Frontend First**:
+   - Start with the front-end: Build the auth page first, then the app page, implement profile switching, etc.
+   - Iterate and test as you go: Each step should be built, tested, and verified before moving on.
+   - Avoid backend-first: Don't implement the backend until the frontend has been established and validated.
+
+2. **Modular APIs**:
+   - Each API (TTS, STT, OpenAI, etc.) should be modular and work independently.
+   - APIs should be able to be plugged in without conflicts across different pages/components.
+
+3. **Step-by-Step Development**:
+   - Authentication → Main App Page → Profile Selection → Story Creation → Image/Video Generation → Audio Creation → Final Assembly
+
+4. **Avoid Overcomplicating Features**:
+   - Build each feature incrementally and modularly to avoid bloated code.
+   - Start with a minimum viable product (MVP) and expand from there. 
